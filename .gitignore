@@ -4,3 +4,4 @@
 mysql_volume
 /dist/
 .env
+/client/node_modules_bck
