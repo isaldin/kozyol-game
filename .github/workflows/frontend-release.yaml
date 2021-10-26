@@ -31,7 +31,9 @@ jobs:
       - uses: actions/upload-artifact@master
         with:
           name: frontend_dist
-          path: client/build
+          path: |
+            client/build
+            docker/conf.d/skazhi.be.conf
 
   Build-and-Push-Docker-Image:
     runs-on: ubuntu-latest
