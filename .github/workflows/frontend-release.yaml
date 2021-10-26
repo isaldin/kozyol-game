@@ -5,34 +5,37 @@ on:
     branch: master
 
 jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#
-#     steps:
-#       - uses: actions/checkout@v1
-#       - name: Use Node.js 12.x
-#         uses: actions/setup-node@v2
-#         with:
-#           node-version: 12.x
-#       - uses: actions/cache@v2
-#         with:
-#           path: ~/.npm
-#           key: ${{ runner.os }}-node-${{ hashFiles('client/package-lock.json') }}
-#           restore-keys: |
-#             ${{ runner.os }}-node-
-#       - name: npm install and build webpack
-#         working-directory: ./client
-#         run: |
-#           npm ci
-#           npm run build
-#       - uses: actions/upload-artifact@master
-#         with:
-#           name: frontend_dist
-#           path: client/build
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 12.x
+      - uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('client/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: npm install and build webpack
+        working-directory: ./client
+        env:
+          NODE_ENV: production
+          REACT_APP_PROD_HOST: https://skazhi.be
+        run: |
+          npm ci
+          npm run build
+      - uses: actions/upload-artifact@master
+        with:
+          name: frontend_dist
+          path: client/build
 
   Build-and-Push-Docker-Image:
     runs-on: ubuntu-latest
-#     needs: build
+    needs: build
     name: Docker Build, Tag, Push
 
     steps:
