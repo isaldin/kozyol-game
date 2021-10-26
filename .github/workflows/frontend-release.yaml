@@ -2,7 +2,8 @@ name: Release kozyol_frontend
 
 on:
   push:
-    branch: master
+    branches:
+      - master
 
 jobs:
   build:
