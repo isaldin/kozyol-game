@@ -55,9 +55,10 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: 'Echo current path'
+              run: pwd
       - name: Build container and push image
         uses: docker/build-push-action@v2
-        run: pwd
         with:
           tags: |
             ghcr.io/${{github.actor}}/${{github.event.repository.name || 'kozyol-game'}}:${{github.sha}}
