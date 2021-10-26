@@ -1,2 +1,2 @@
 FROM nginx:1.17
-COPY client/build/ /usr/share/nginx/html
+COPY frontend_dist /usr/share/nginx/html
