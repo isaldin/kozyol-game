@@ -26,7 +26,7 @@ jobs:
           NODE_ENV: production
           REACT_APP_PROD_HOST: https://skazhi.be
         run: |
-          npm ci
+          npm install --production=false
           npm run build
       - uses: actions/upload-artifact@master
         with:
