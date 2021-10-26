@@ -1,3 +1,5 @@
+[![Release kozyol_frontend](https://github.com/isaldin/kozyol-game/actions/workflows/frontend-release.yaml/badge.svg?branch=master&event=push)](https://github.com/isaldin/kozyol-game/actions/workflows/frontend-release.yaml)
+
 - Авторизация/регистрация passport.js
 - Создание игры
 - Список игр
