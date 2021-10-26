@@ -67,3 +67,4 @@ jobs:
             ghcr.io/${{github.actor}}/${{github.event.repository.name || 'kozyol-game'}}:latest
           file: ./client/front.Dockerfile
           push: true
+          context: ${{steps.download_build.outputs.download-path}}
