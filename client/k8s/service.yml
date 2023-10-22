@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kozyol-front-service
+spec:
+  selector:
+    app: kozyol-front
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

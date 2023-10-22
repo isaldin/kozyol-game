@@ -20,17 +20,14 @@ import { StepController } from './step/step.controller';
 import { SubscribeController } from './subscribe/subscribe.controller';
 import { SubscribeModule } from './subscribe/subscribe.module';
 import { AwaitedConfirmation } from './games/entities/awaitedConfirmation';
+import {root} from "./paths";
 
 @Module({
   imports: [
     ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.MYSQL_HOST,
-      port: 3306,
-      username: process.env.MYSQL_USER,
-      password: process.env.MYSQL_PASSWORD,
-      database: process.env.MYSQL_DATABASE,
+      type: "sqlite",
+      database: `${root}/data/line.sqlite`,
       // logging: true,
       entities: [User, Game, Round, GameSet, AwaitedConfirmation],
       synchronize: true,

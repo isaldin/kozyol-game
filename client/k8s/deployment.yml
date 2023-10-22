@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kozyol-front-deployment
+  labels:
+    app: kozyol-front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kozyol-front
+  template:
+    metadata:
+      labels:
+        app: kozyol-front
+        dummy: "5"
+    spec:
+      containers:
+        - name: kozyol-front
+          image: saldin/kozyol_frontend:latest

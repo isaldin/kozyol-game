@@ -7,6 +7,7 @@ import { gameStateUpdate } from 'store/actions/gameState'
 import { GameItem } from 'model/GameItem'
 import { GameState } from 'model/GameState'
 import { authorizationRoute } from 'router/routerPaths'
+import {apiUrl} from "../helpers/apiUrl";
 
 export class SseService {
   private onList = (event: any) => {
@@ -22,7 +23,8 @@ export class SseService {
     store.dispatch(gameStateUpdate(state))
   }
 
-  private onError = () => {
+  private onError = (error: Error) => {
+    console.error('sse connection error: ', error)
   }
 
   private listManager = new SSEConnectionManager('list', this.onList, this.onError)
@@ -61,7 +63,7 @@ class SSEConnectionManager {
     }
 
     this.connection = new EventSource(
-      `/api/subscribe${path}`,
+        apiUrl(`/subscribe${path}`),
       { withCredentials: true }
     )
 

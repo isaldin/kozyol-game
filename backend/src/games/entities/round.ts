@@ -19,10 +19,10 @@ export class Round extends Base {
   )
   set: GameSet;
 
-  @Column({ type: 'json' })
+  @Column({ type: 'simple-json' })
   desk: Desk;
 
-  @Column({ type: 'json' })
+  @Column({ type: 'simple-json' })
   hands: { [playerId: number]: Cards };
 
   @ManyToOne(() => User, { nullable: false, eager: true })

@@ -1,0 +1,19 @@
+version: 3
+
+vars:
+  CONTAINER_IMAGE_NAME: saldin/kozyol_backend
+  CONTAINER_IMAGE_TAG: latest
+  CONTAINER_IMAGE: "{{.CONTAINER_IMAGE_NAME}}:{{.CONTAINER_IMAGE_TAG}}"
+  DOCKERFILE: backend.Dockerfile
+
+tasks:
+  build:
+    desc: Build docker container image
+    cmds:
+      - docker build -t {{.CONTAINER_IMAGE}} . -f {{.DOCKERFILE}} --target prod-build
+
+  push:
+    desc: Push image to Docker Hub
+    deps: [build]
+    cmds:
+      - docker push {{.CONTAINER_IMAGE}}

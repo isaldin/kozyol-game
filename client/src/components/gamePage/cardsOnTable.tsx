@@ -28,9 +28,10 @@ export class CardsOnTableComponent extends Component<CardsOnTableProps, any> {
 
     return (
       <Container>
-        <Title>Колода: {cardsInDeck || 0}/{cardsInDeckTotal}. Козырь:
-          <SuitSymbol isRed={suitIsRed[trump]}>{suitSymbols[trump]}</SuitSymbol>
-          )</Title>
+        <Title>
+            Колода: {cardsInDeck || 0}/{cardsInDeckTotal}. Козырь:
+            <SuitSymbol isRed={suitIsRed[trump]}>{suitSymbols[trump]}</SuitSymbol>
+        </Title>
         <CardsList>
           {slots.map((slot, i) =>
             <CardSlot key={i} cardsCount={slot.length}>{slot.map((card, j) => {

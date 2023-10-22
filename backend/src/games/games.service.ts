@@ -72,17 +72,17 @@ export class GamesService {
     return game;
   }
 
-  @Cron(CronExpression.EVERY_MINUTE)
+  @Cron(CronExpression.EVERY_5_MINUTES)
   async cleanAbandonedGames() {
     const abandonedGames = await this.connection.query(
-      'SELECT gameId FROM `set` where (UNIX_TIMESTAMP(now()) - UNIX_TIMESTAMP(updatedAt)) > 600 and finished = false;',
+      'SELECT gameId FROM `set` where (unixepoch() - unixepoch(updatedAt)) > 600 and finished = false;',
     );
 
     const notStartedGamesQuery =
       'select `g`.`id`, count(`s`.`id`) as `setsCount` ' +
       'from `game` `g` ' +
       'left join `set` `s` on `g`.`id` = `s`.`gameId`  ' +
-      'where UNIX_TIMESTAMP(now()) - UNIX_TIMESTAMP(`g`.`createdAt`) > 600 ' +
+      'where unixepoch() - unixepoch(`g`.`createdAt`) > 600 ' +
       'group by `g`.`id` ' +
       'having `setsCount` = 0;';
     const notStartedGames = await this.connection.query(notStartedGamesQuery);
@@ -90,8 +90,9 @@ export class GamesService {
     const gamesForDelete = notStartedGames
       .map(prop('id'))
       .concat(abandonedGames.map(prop('gameId')));
-    this.logger.debug(`games for delete ${gamesForDelete}`);
+
     if (gamesForDelete.length > 0) {
+      this.logger.debug(`games for delete ${gamesForDelete}`);
       await Game.delete(gamesForDelete);
       await broadcastGamesList();
     }

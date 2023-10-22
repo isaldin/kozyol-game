@@ -1,0 +1,31 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: kozyol-backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kozyol
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: kozyol
+        tier: backend
+        dummy: '4'
+    spec:
+      containers:
+        - name: kozyol-backend
+          image: saldin/kozyol_backend:latest
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: kozyol-secret
+                  key: JWT_SECRET
+            - name: COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: kozyol-secret
+                  key: COOKIE_SECRET

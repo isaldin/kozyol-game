@@ -9,7 +9,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    cors: { origin: process.env.NODE_ENV === 'production' ? 'https://skazhi.be' : true },
+    cors: { origin: process.env.NODE_ENV === 'production' ? 'https://skazhi.be' : true, credentials: true },
   });
   app.use(helmet());
   app.use(cookiesParser(process.env.COOKIE_SECRET));

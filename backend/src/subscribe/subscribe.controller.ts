@@ -10,7 +10,7 @@ import { GameGuard } from 'src/games/games.guard';
 type GameEventType = 'list' | 'state';
 type SseChunkDataType = { data: string; event: GameEventType };
 const sseChunkData = ({ data, event }: SseChunkDataType) =>
-  Object.entries({ event, data })
+  Object.entries({ event, data, id: Date.now() })
     .filter(([, value]) => ![undefined, null].includes(value))
     .map(([key, value]) => `${key}: ${value}`)
     .join('\n') + '\n\n';
@@ -22,14 +22,23 @@ let gamesConns: {
   };
 } = {};
 
-const availabeGames = async () => {
+const availableGames = async () => {
   const games = await Game.find();
   return games.filter(game => game.hasAvailableSlots());
 };
 
 const broadcast = (data: SseChunkDataType, res?: Response) => {
-  res.write(sseChunkData(data));
+  const dataToSend = sseChunkData(data)
+  res.write(dataToSend);
 };
+
+const setHeadersToResponse = (res: Response) => {
+  res.writeHead(200, '', {
+    'content-type': 'text/event-stream',
+    'Connection': 'keep-alive',
+    'Cache-Control': 'no-cache, no-transform'
+  })
+}
 
 export const broadcastGameState = async (gameId: number) => {
   const game = await Game.findOne({ where: { id: gameId }, relations: ['sets'] });
@@ -44,10 +53,10 @@ export const broadcastGameState = async (gameId: number) => {
 };
 
 export const broadcastGamesList = async () => {
-  const games = await availabeGames();
-  const availabeGamesString = JSON.stringify(games);
+  const games = await availableGames();
+  const availableGamesString = JSON.stringify(games);
   forEach(res => {
-    broadcast({ data: availabeGamesString, event: 'list' }, res);
+    broadcast({ data: availableGamesString, event: 'list' }, res);
   }, values(listConns));
 };
 
@@ -67,10 +76,8 @@ export class SubscribeController {
       return;
     }
 
-    res.setHeader('content-type', 'text/event-stream');
-    res.setHeader('Transfer-Encoding', 'chunked');
-    res.setHeader('Connection', 'keep-alive');
-    res.status(200);
+    setHeadersToResponse(res)
+
     res.on('close', () => {
       console.log('conn closed for user with id %d in game %d', req.user.id, gameId);
       gamesConns = dissocPath([`${gameId}`, `${req.user.id}`], gamesConns);
@@ -88,18 +95,16 @@ export class SubscribeController {
       return;
     }
 
-    res.setHeader('content-type', 'text/event-stream');
-    res.setHeader('Connection', 'keep-alive');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.status(200);
+    setHeadersToResponse(res)
+
     res.on('close', () => {
       delete listConns[`${req.user.id}`];
       console.log('[list] conn closed for user with id %d', req.user.id);
     });
     listConns[`${req.user.id}`] = res;
 
-    const games = await availabeGames();
-    const availabeGamesString = JSON.stringify(games);
-    broadcast({ data: availabeGamesString, event: 'list' }, res);
+    const games = await availableGames();
+    const availableGamesString = JSON.stringify(games);
+    broadcast({ data: availableGamesString, event: 'list' }, res);
   }
 }

@@ -46,10 +46,10 @@ export class GameSet extends Base {
   @Column()
   trump: Suit;
 
-  @Column({ type: 'json' })
+  @Column({ type: 'simple-json' })
   deck: Deck;
 
-  @Column({ type: 'json' })
+  @Column({ type: 'simple-json' })
   score: { [playerId: number]: number };
 
   @Column({ default: false })

@@ -19,8 +19,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "startDB": "(docker-compose -p kozyol down || true) && docker-compose -p kozyol up -d",
-    "docker:build": "docker build -t saldin/kozyol_backend:latest . -f backend.Dockerfile --target prod-build",
-    "": ""
+    "docker:build": "docker build -t saldin/kozyol_backend:latest . -f backend.Dockerfile --target prod-build"
   },
   "dependencies": {
     "@nestjs/common": "^7.0.1",
@@ -35,7 +34,6 @@
     "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
     "helmet": "^3.22.0",
-    "mysql": "^2.18.1",
     "p-queue": "^6.4.0",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
@@ -44,6 +42,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.5.4",
+    "sqlite3": "^5.1.6",
     "typeorm": "^0.2.24"
   },
   "devDependencies": {

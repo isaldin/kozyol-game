@@ -6,6 +6,9 @@ import { store } from 'store'
 import { Provider } from 'react-redux'
 import { history } from 'router/router'
 import './index.css'
+import axios from "axios";
+
+axios.defaults.withCredentials = true
 
 const rootElement = document.getElementById('root')
 

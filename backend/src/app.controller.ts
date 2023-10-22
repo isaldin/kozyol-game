@@ -28,6 +28,7 @@ export class AppController {
     res.cookie('Authorization', access_token, {
       httpOnly: true,
       expires: new Date(Date.now() + 60 * 60 * 24 * 30 * 1000), // 30d
+      domain: 'skazhi.be'
     });
     res.end();
   }

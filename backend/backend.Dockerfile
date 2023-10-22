@@ -1,17 +1,20 @@
-FROM node:12.14 as build-env
+FROM --platform=linux/amd64 node:18.13 as build-env
 
 WORKDIR /usr/src/app
 
 COPY package.json .
+COPY yarn.lock .
+
 ENV NODE_ENV=production
-RUN yarn install --production=false
+RUN yarn install --frozen-lockfile --production=false
 
 COPY . .
-RUN yarn build \
-  && rm -rf node_modules && yarn install --production
+RUN yarn build
+RUN rm -rf node_modules
+RUN yarn install --frozen-lockfile --production
 
 #
-FROM node:12.14.0-buster-slim as prod-build
+FROM --platform=linux/amd64 node:18.13-buster-slim as prod-build
 
 USER node
 
@@ -22,3 +25,5 @@ EXPOSE 8041
 
 COPY --from=build-env /usr/src/app/dist/. ./dist
 COPY --from=build-env /usr/src/app/node_modules/ ./node_modules
+
+CMD [ "node", "dist/main.js" ]
